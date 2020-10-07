@@ -26,21 +26,28 @@ Though WSD is not perfect, it is good enough in my opinion and you can just edit
     ```
     git clone https://github.com/johan456789/yaktoa.git
     ```
-2. Copy `/Volumes/Kindle/system/vocabulary/vocab.db` to `yaktoa`.
+    
+2. Install dependencies
 
-3. Get a PROTOTYPE [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), use your credentials and edit `cred.py` accordingly.
+    ````
+    pip install -r requirements.txt
+    ````
+
+3. Copy `/Volumes/Kindle/system/vocabulary/vocab.db` to `yaktoa`.
+
+4. Get a PROTOTYPE [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), use your credentials and edit `cred.py` accordingly.
 
    ![prototype](https://i.imgur.com/yK8y4kx.jpg)
-   
-4. Run script and type the index of the book interested.
+
+5. Run script and type the index of the book interested.
 
     ```
     python main.py
     ```
-    
+
     ![screenshot](https://i.imgur.com/b24cDMk.jpg)
 
-5. Wait and voilà! The deck is saved as `output.apkg`.
+6. Wait and voilà! The deck is saved as `output.apkg`.
 
     The free API plan has some limitations and I have to sleep for 2 seconds for another request, so it takes some time.
 
