@@ -1,3 +1,4 @@
+import argparse
 import genanki
 from pywsd.lesk import simple_lesk
 
@@ -33,7 +34,7 @@ def ask_for_title(books):
   book_title = books['title'].iloc[book_idx]
   return book_id, book_title
 
-def main(con):
+def main(con, args):
   # get books
   books = get_book_info(con)
 
@@ -53,16 +54,27 @@ def main(con):
   del vocabs['word']  # remove word and keep stem field only
 
   # get IPA
-  print('Getting IPA...')
-  vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
-  print(vocabs.head())
+  if not args['no_ipa']:
+    print('Getting IPA...')
+    vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
+
+  # print result
+  if args['print']:
+    print(vocabs.head())
 
   # export to apkg
   add_notes(my_deck, my_model, vocabs.values.tolist())
-  save_apkg(my_deck)
+  save_apkg(my_deck, args['output'])
 
 
-if __name__ == "__main__":
-  con = sqlite3.connect("vocab.db")
-  main(con)
+if __name__ == '__main__':
+  ap = argparse.ArgumentParser(description='Export Kindle vocabulary to Anki decks with definitions')
+  ap.add_argument('-i', '--input', default='vocab.db', help='Input filename')
+  ap.add_argument('-o', '--output', default='output.apkg', help='Output filename')
+  ap.add_argument('--no_ipa', action='store_true', help='Leave IPA field empty')
+  ap.add_argument('-p', '--print', action='store_true', help='Print first 5 vocabularies')
+  args = vars(ap.parse_args())
+
+  con = sqlite3.connect(args['input'])
+  main(con, args)
   con.close()
