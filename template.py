@@ -19,10 +19,10 @@ back_template = '''\
 
 style_template = '''\
 .card {
-  font-family: arial;
-  font-size: 20px;
-  text-align: center;
-  color: black;
-  background-color: white;
+    font-family: arial;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    background-color: white;
 }
 '''

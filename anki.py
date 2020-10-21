@@ -1,21 +1,20 @@
 import genanki
-import random
 from template import *
 
 
 def add_notes(deck, model, notes):
-  def note_constructor(fields):
-    # Note
-    return genanki.Note(
-      model=my_model,
-      fields=fields
-    )
-  for note in notes:
-    my_note = note_constructor(note)
-    deck.add_note(my_note)
+    def note_constructor(fields):
+        # Note
+        return genanki.Note(
+            model=my_model,
+            fields=fields
+        )
+    for note in notes:
+        my_note = note_constructor(note)
+        deck.add_note(my_note)
 
 def save_apkg(deck, filename):
-  genanki.Package(deck).write_to_file(filename)
+    genanki.Package(deck).write_to_file(filename)
 
 # Model (Note type)
 my_model = genanki.Model(
@@ -48,12 +47,14 @@ my_deck = genanki.Deck(
 )
 
 if __name__ == "__main__":
-  notes = [['expr_test1', 'no_ipa', 'no_audio',
+    notes = [
+        ['expr_test1', 'no_ipa', 'no_audio',
             'no_def', 'no_image', 'no_collocation', 'no_example', 'no_source'],
-           ['expr_test2', 'no_ipa', 'no_audio',
+        ['expr_test2', 'no_ipa', 'no_audio',
             'no_def', 'no_image', 'no_collocation', 'no_example', 'no_source'],
-           ['expr_test3', 'no_ipa', 'no_audio',
-            'no_def', 'no_image', 'no_collocation', 'no_example', 'no_source']]
+        ['expr_test3', 'no_ipa', 'no_audio',
+            'no_def', 'no_image', 'no_collocation', 'no_example', 'no_source']
+    ]
 
-  add_notes(my_deck, my_model, notes)
-  save_apkg(my_deck)
+    add_notes(my_deck, my_model, notes)
+    save_apkg(my_deck, 'output.apkg')
