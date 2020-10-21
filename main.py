@@ -18,7 +18,6 @@ def get_def(sent, ambiguous):
     definition = synset.definition()
     lexname = lexname_map[synset.lexname().split('.')[0]]
     ans = f'{lexname}{definition}'
-    print(ans)
   except:
     ans = ''
   return ans
@@ -53,9 +52,9 @@ def main(con):
       x['stem'], '<b><u>' + x['stem'] + '</u></b>'), axis=1)
 
   # get IPA
-  # print('Getting IPA...')
-  # vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
-  # print(vocabs.head())
+  print('Getting IPA...')
+  vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
+  print(vocabs.head())
 
   # export to apkg
   add_notes(my_deck, my_model, vocabs.values.tolist())
