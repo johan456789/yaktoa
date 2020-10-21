@@ -2,3 +2,4 @@ genanki==0.8.1
 pandas==1.1.3
 pywsd==1.2.4
 requests==2.24.0
+colorama==0.3.7
