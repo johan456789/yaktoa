@@ -6,20 +6,24 @@ This program generates `.apkg` deck directly from `vocab.db` located in your Kin
 ![demo_screenshot](https://i.imgur.com/ZzWgKVN.jpg)
 
 ## Features
-- Definitions are automatically filled in with (probably) correct sense
+- Definitions are automatically filled in with (maybe) correct sense
 
   The word sense disambiguation (WSD) is powered by [pywsd](https://github.com/alvations/pywsd) and [WordNet](https://wordnet.princeton.edu/).
-Though WSD is not perfect, it is good enough in my opinion and you can just edit the file when reviewing if you see an incorrect definition.
+  Though WSD is not perfect, it is good enough in my opinion and you can just edit the file when reviewing if you see an incorrect definition.
+
+- Manual mode
+
+  You can use manual mode and select the correct word sense one by one if you want absolute accuracy.
 
 - IPA (en-us) are automatically added
 
-  This is powered by [Oxford Dictionaries API](https://developer.oxforddictionaries.com/). 
+  This is powered by [Oxford Dictionaries API](https://developer.oxforddictionaries.com/). You have to provide your own API key (it's free).
 
 - Source book of the word is added to the card
 
   So you can recall where did you see the word. It is currently not used in the card template, edit it as you like.
 
-## Usage
+## Installation
 
 1. Clone this project
 
@@ -39,17 +43,60 @@ Though WSD is not perfect, it is good enough in my opinion and you can just edit
 
    ![prototype](https://i.imgur.com/yK8y4kx.jpg)
 
-5. Run script and type the index of the book interested.
+## Usage
+
+```
+usage: python main.py [-h] [-i INPUT] [-o OUTPUT] [--no_ipa] [-p] [-m]
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Input filename
+  -o OUTPUT, --output OUTPUT
+                        Output filename
+  --no_ipa              Leave IPA field empty
+  -p, --print           Print first 5 vocabularies
+  -m, --manual          Manually select definition
+```
+
+### Auto mode (default)
+
+1. Run script and type the index of the book interested.
 
     ```
-    python main.py
+    python main.py -i vocab.db -o output.apkg
     ```
 
     ![screenshot](https://i.imgur.com/b24cDMk.jpg)
 
-6. Wait and voilà! The deck is saved as `output.apkg`.
+2. Wait and voilà! The deck is saved as `output.apkg`.
 
     The free API plan has some limitations and I have to sleep for 2 seconds for another request, so it takes some time.
+
+### Manual mode
+
+Run script with `-m` or `--manual` tag.
+
+```
+python main.py -i vocab.db -o output.apkg -m
+```
+
+1. Type the number of the book you want:
+
+    ![screenshot](https://i.imgur.com/b24cDMk.jpg)
+
+2. Select correct word senses:
+
+    - Type the number with correct word sense and press enter:
+
+    ![](https://i.imgur.com/iZcBQ1c.jpg)
+
+    - Simply press enter if the predicted sense (the green one) is correct:
+
+    ![](https://i.imgur.com/6HpMYhc.jpg)
+  
+    Lower left numbers (2/14) tell you the current progress. There are a total of 14 vocabularies and it's the 2nd one.
+
+3. Wait for IPA queries and it's done!
 
 ## Credits
 
