@@ -1,5 +1,5 @@
 import genanki
-from template import *
+from template import front_template, back_template, style_template
 
 
 def add_notes(deck, model, notes):

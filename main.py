@@ -1,10 +1,11 @@
 import argparse
+import sqlite3
 import genanki
 from nltk.corpus import wordnet as wn
 from colorama import Style, Fore
 
-from db import *
-from anki import *
+from db import get_book_info, get_vocabs
+from anki import add_notes, save_apkg, my_model, my_deck
 from ipa import get_ipa
 
 
