@@ -3,7 +3,7 @@
 
 This program generates `.apkg` deck directly from `vocab.db` located in your Kindle device. English support only.
 
-![demo_screenshot](https://i.imgur.com/kgsoZZw.jpg)
+![demo_screenshot](https://i.imgur.com/ZzWgKVN.jpg)
 
 ## Features
 - Definitions are automatically filled in with (probably) correct sense
