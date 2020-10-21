@@ -5,13 +5,23 @@ from db import *
 from anki import *
 from ipa import get_ipa
 
+
 def get_def(sent, ambiguous):
+  lexname_map = {
+    'noun': 'n. ',
+    'verb': 'v. ',
+    'adj': 'adj. ',
+    'adv': 'adv. '
+  }
   try:
-    ans = simple_lesk(sent, ambiguous).definition()
+    synset = simple_lesk(sent, ambiguous)
+    definition = synset.definition()
+    lexname = lexname_map[synset.lexname().split('.')[0]]
+    ans = f'{lexname}{definition}'
+    print(ans)
   except:
     ans = ''
   return ans
-
 
 def ask_for_title(books):
   titles = [f'{str(idx).ljust(4)}{title}' for idx,
@@ -23,7 +33,6 @@ def ask_for_title(books):
   book_id = books['id'].iloc[book_idx]
   book_title = books['title'].iloc[book_idx]
   return book_id, book_title
-
 
 def main(con):
   # get books
@@ -44,9 +53,9 @@ def main(con):
       x['stem'], '<b><u>' + x['stem'] + '</u></b>'), axis=1)
 
   # get IPA
-  print('Getting IPA...')
-  vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
-  print(vocabs.head())
+  # print('Getting IPA...')
+  # vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
+  # print(vocabs.head())
 
   # export to apkg
   add_notes(my_deck, my_model, vocabs.values.tolist())
