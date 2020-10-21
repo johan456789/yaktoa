@@ -14,7 +14,7 @@ def get_vocabs(db_con, book_id):
   # print(f'\nShowing vocabs of "{book_title.fetchone()[0]}":')
 
   query_vocabs = '''SELECT
-    words.stem, lookups.usage, book_info.title
+    words.stem, words.word, lookups.usage, book_info.title
     FROM lookups
     JOIN book_info
     ON lookups.book_key = book_info.id AND
@@ -22,11 +22,11 @@ def get_vocabs(db_con, book_id):
     JOIN words
     ON lookups.word_key = words.id'''
   vocabs = pd.read_sql_query(query_vocabs, db_con, params=args)
-  vocabs.insert(loc=1, column='image', value='')
-  vocabs.insert(loc=1, column='collocation', value='')
-  vocabs.insert(loc=1, column='definition', value='')
-  vocabs.insert(loc=1, column='audio', value='')
-  vocabs.insert(loc=1, column='ipa', value='')
+  vocabs.insert(loc=2, column='image', value='')
+  vocabs.insert(loc=2, column='collocation', value='')
+  vocabs.insert(loc=2, column='definition', value='')
+  vocabs.insert(loc=2, column='audio', value='')
+  vocabs.insert(loc=2, column='ipa', value='')
   return vocabs
 
 if __name__ == "__main__":
@@ -36,7 +36,7 @@ if __name__ == "__main__":
   books = get_book_info(con)
 
   # select a book
-  book_id = books['id'].iloc[8]
+  book_id = books['id'].iloc[1]
 
   # get vocabs of the book
   vocabs = get_vocabs(con, book_id)

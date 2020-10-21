@@ -47,9 +47,10 @@ def main(con):
   print('Getting definitions...')
   vocabs['definition'] = vocabs[['stem', 'usage']].apply(
     lambda x: get_def(x['usage'], x['stem']), axis=1)
-  vocabs['usage'] = vocabs[['stem', 'usage']].apply(
+  vocabs['usage'] = vocabs[['word', 'usage']].apply(
     lambda x: x['usage'].replace(
-      x['stem'], '<b><u>' + x['stem'] + '</u></b>'), axis=1)
+      x['word'], '<b><i>' + x['word'] + '</i></b>'), axis=1)
+  del vocabs['word']  # remove word and keep stem field only
 
   # get IPA
   print('Getting IPA...')
