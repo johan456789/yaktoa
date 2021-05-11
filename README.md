@@ -17,7 +17,7 @@ This program generates `.apkg` deck directly from `vocab.db` located in your Kin
 
 - IPA (en-us) are automatically added
 
-  This is powered by [Oxford Dictionaries API](https://developer.oxforddictionaries.com/). You have to provide your own API key (it's free).
+  This is powered mostly by [English-to-IPA](https://github.com/mphilli/English-to-IPA), and [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) as well. You have to provide your own API key (it's free).
 
 - Source book of the word is added to the card
 
@@ -84,13 +84,13 @@ python main.py -i vocab.db -o output.apkg -m
 
     ![screenshot](https://i.imgur.com/b24cDMk.jpg)
 
-2. Select correct word senses:
+2. Select correct word senses (the green one is what `pywsd` predicts):
 
     - Type the number with correct word sense and press enter:
 
     ![](https://i.imgur.com/iZcBQ1c.jpg)
 
-    - Simply press enter if the predicted sense (the green one) is correct:
+    - Simply press enter if the predicted sense is correct:
 
     ![](https://i.imgur.com/6HpMYhc.jpg)
   
@@ -102,5 +102,5 @@ python main.py -i vocab.db -o output.apkg -m
 
 Without them this project would have been much harder.
 
-[genanki](https://github.com/kerrickstaley/genanki), [pywsd](https://github.com/alvations/pywsd), 
+[genanki](https://github.com/kerrickstaley/genanki), [pywsd](https://github.com/alvations/pywsd), [English-to-IPA](https://github.com/mphilli/English-to-IPA)
 [WordNet](https://wordnet.princeton.edu/), [Oxford Dictionaries](https://developer.oxforddictionaries.com/)
