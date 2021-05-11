@@ -3,9 +3,10 @@ import requests
 import json
 import time
 from cred import app_id, app_key
+import eng_to_ipa as ipa
 
 
-def get_ipa(word, test=False):
+def get_oed_ipa(word):
     try:
         langs = ['en-us']  # 'en-gb' does not work
 
@@ -22,13 +23,20 @@ def get_ipa(word, test=False):
 
         # ret =  f'uk[{spellings[0]}] us[{spellings[1]}]'
         ret =  f'us[{spellings[0]}]'
-        if not test:
-            time.sleep(2.1)  # limit utilization of Hits per minute: 30/60
+        
+        # time.sleep(2.1)  # limit utilization of Hits per minute: 30/60
     except:
         ret = ''
 
     return ret
 
+def get_ipa(word):
+    if ipa.isin_cmu(word):
+        return f'us[{ipa.convert(word)}]'
+    else:
+        return get_oed_ipa(word)
+
+
 if __name__ == "__main__":
     query = sys.argv[1]
-    print(get_ipa(query, test=True))
+    print(get_ipa(query))
