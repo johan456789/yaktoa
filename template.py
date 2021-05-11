@@ -15,7 +15,7 @@ back_template = '''\
 {{Collocation}}
 <hr id=answer>
 
-{{Example sentence}}</div>'''
+{{Example sentence}}'''
 
 style_template = '''\
 .card {
