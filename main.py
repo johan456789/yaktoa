@@ -3,11 +3,14 @@ import sqlite3
 import genanki
 from nltk.corpus import wordnet as wn
 from colorama import Style, Fore
+from tqdm import tqdm
 
 from db import get_book_info, get_vocabs
 from anki import add_notes, save_apkg, my_model, my_deck
 from ipa import get_ipa
 
+
+tqdm.pandas()
 
 def get_def(synset):
     if synset is None:
@@ -78,7 +81,7 @@ def main(con, args):
         print(f'WSD accuracy is {round(1 - incorrect_count / len(vocabs), 4) * 100}%')
     else:
         print('Getting definitions...')
-        vocabs['definition'] = vocabs[['stem', 'usage']].apply(
+        vocabs['definition'] = vocabs[['stem', 'usage']].progress_apply(
             lambda x: get_def(predict(x['usage'], x['stem'])), axis=1
         )
         vocabs['usage'] = vocabs[['word', 'usage']].apply(
@@ -89,7 +92,7 @@ def main(con, args):
     # get IPA
     if not args['no_ipa']:
         print('Getting IPA...')
-        vocabs['ipa'] = vocabs['stem'].apply(lambda x: get_ipa(x))
+        vocabs['ipa'] = vocabs['stem'].progress_apply(lambda x: get_ipa(x))
 
     # print result
     if args['print']:
