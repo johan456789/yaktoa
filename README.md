@@ -37,14 +37,16 @@ This program generates `.apkg` deck directly from `vocab.db` located in your Kin
     pip install -r requirements.txt
     ````
 
-3. Copy `/Volumes/Kindle/system/vocabulary/vocab.db` to `yaktoa`.
-
-4. Get a INTRODUCTORY [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), use your credentials and edit `cred.py` accordingly.
+3. Get a INTRODUCTORY [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), use your credentials and edit `cred.py` accordingly.
    
    ![api](https://user-images.githubusercontent.com/14802181/168453805-57a2b31c-49fe-4694-8626-37ec335bad57.png)
 
 
 ## Usage
+
+Before running the script:
+
+- Copy `/Volumes/Kindle/system/vocabulary/vocab.db` to `yaktoa`.
 
 ```
 usage: python main.py [-h] [-i INPUT] [-o OUTPUT] [--no_ipa] [-p] [-m]
