@@ -1,6 +1,7 @@
 import argparse
 import sqlite3
 import genanki
+import nltk_modules
 from nltk.corpus import wordnet as wn
 from colorama import Style, Fore
 from tqdm import tqdm
