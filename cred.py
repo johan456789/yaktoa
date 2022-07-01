@@ -1,12 +1,10 @@
 '''
-Get a free API at https://developer.oxforddictionaries.com/
-Use your credentials and fill in "Application ID" and "Application Keys" below.
+Get a free Merriam-Webster Dictionary API at https://dictionaryapi.com/
+Use your credentials and fill in app_key below.
 
-PROTOTYPE API
-Perfect for getting started
-1000 requests per month
-Limited data access
-Limited request rate
+FREE API
+- non-commercial use, usage does not exceed 
+- 1000 queries per day per API key
+- limited to two reference APIs
 '''
-app_id = ""
 app_key = ""
