@@ -17,7 +17,7 @@ This program generates `.apkg` deck directly from `vocab.db` located in your Kin
 
 - IPA (en-us) are automatically added
 
-  This is powered mostly by [English-to-IPA](https://github.com/mphilli/English-to-IPA), and [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) as well. You have to provide your own API key (it's free).
+  This is powered mostly by [English-to-IPA](https://github.com/mphilli/English-to-IPA), and [Merriam-Webster Dictionary's free API](https://dictionaryapi.com/) as well. Providing your own API key is optional.
 
 - Source book of the word is added to the card
 
@@ -37,9 +37,11 @@ This program generates `.apkg` deck directly from `vocab.db` located in your Kin
     pip install -r requirements.txt
     ````
 
-3. Get a INTRODUCTORY [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), use your credentials and edit `cred.py` accordingly.
+3. (Optional) Get a [Merriam-Webster Dictionary's free API](https://dictionaryapi.com/), use your credentials and edit `cred.py` accordingly.
+
+    This step is optional. If the word's IPA is not found, the field will be left blank.
    
-   ![api](https://user-images.githubusercontent.com/14802181/168453805-57a2b31c-49fe-4694-8626-37ec335bad57.png)
+    > The Merriam-Webster Dictionary API is free as long as it is for non-commercial use, usage does not exceed 1000 queries per day per API key, and use is limited to two reference APIs.
 
 
 ## Usage
@@ -106,4 +108,4 @@ python main.py -i vocab.db -o output.apkg -m
 Without them this project would have been much harder.
 
 [genanki](https://github.com/kerrickstaley/genanki), [pywsd](https://github.com/alvations/pywsd), [English-to-IPA](https://github.com/mphilli/English-to-IPA)
-[WordNet](https://wordnet.princeton.edu/), [Oxford Dictionaries](https://developer.oxforddictionaries.com/)
+[WordNet](https://wordnet.princeton.edu/), [Merriam-Webster Dictionary](https://dictionaryapi.com/)
