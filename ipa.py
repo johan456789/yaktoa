@@ -33,8 +33,8 @@ def get_oed_ipa(word):
 def get_ipa(word):
     if ipa.isin_cmu(word):
         return f'us[{ipa.convert(word)}]'
-    else:
-        return get_oed_ipa(word)
+    elif app_id and app_key:
+            return get_oed_ipa(word)
 
 
 if __name__ == "__main__":
