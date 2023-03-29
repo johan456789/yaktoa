@@ -1,6 +1,6 @@
-genanki==0.10.0
-pandas==1.2.4
-pywsd==1.2.4
-requests==2.24.0
-colorama==0.3.7
-eng-to-ipa==0.0.2
+genanki
+pandas
+pywsd
+requests
+colorama
+eng-to-ipa
