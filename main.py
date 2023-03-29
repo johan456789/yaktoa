@@ -11,13 +11,10 @@ from anki import add_notes, save_apkg, my_model, my_deck
 from ipa import get_ipa
 from utilities import ask_for_book, get_def_manual, get_def_auto
 
-
-def main(con, args):
-    books = get_book_info(con)
-    book_id, book_title = ask_for_book(books)
-
-    print(f'Getting vocabulary of "{book_title}"...')
+def process_one_book(con, book_id):
     vocabs = get_vocabs(con, book_id)
+    if vocabs.empty:  # no vocabs in this book, potentially a built-in dictionary
+        return
 
     if args['manual']:
         vocabs = get_def_manual(vocabs, report_incorrect=True)
@@ -31,8 +28,19 @@ def main(con, args):
 
     if args['print']:
         print(vocabs.head())
-
+    
     add_notes(my_deck, my_model, vocabs.values.tolist())
+
+def main(con, args):
+    books = get_book_info(con)
+
+    if args['all']:
+        for book_id in books['id']:
+            process_one_book(con, book_id)
+    else:
+        book_id = ask_for_book(books)
+        process_one_book(con, book_id)
+    
     save_apkg(my_deck, args['output'])
 
 
@@ -43,6 +51,7 @@ if __name__ == '__main__':
     ap.add_argument('--no_ipa', action='store_true', help='Leave IPA field empty')
     ap.add_argument('-p', '--print', action='store_true', help='Print first 5 vocabularies')
     ap.add_argument('-m', '--manual', action='store_true', help='Manually select definition')
+    ap.add_argument('-a', '--all', action='store_true', help='Process all books')
     args = vars(ap.parse_args())
 
     print(f'Input: {args["input"]}')

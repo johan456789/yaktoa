@@ -61,6 +61,7 @@ optional arguments:
   --no_ipa              Leave IPA field empty
   -p, --print           Print first 5 vocabularies
   -m, --manual          Manually select definition
+  -a, --all             Process all books
 ```
 
 ### Auto mode (default)

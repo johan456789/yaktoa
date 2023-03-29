@@ -28,9 +28,7 @@ def ask_for_book(books):
     for idx, title in enumerate(books['title']):
         print(f'{str(idx).ljust(4)}{title}')
     book_idx = int(input('Here are your books, which do you want to use (type number):'))
-    book_id = books['id'].iloc[book_idx]
-    book_title = books['title'].iloc[book_idx]
-    return book_id, book_title
+    return books['id'].iloc[book_idx]
 
 def get_def_manual(vocabs, report_incorrect=False):
     incorrect_count = 0
