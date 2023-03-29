@@ -14,8 +14,8 @@ def get_ipa_from_api(word):
         url = "https://dictionaryapi.com/api/v3/references/learners/json/{}?key={}".format(word.lower(), app_key)
         response = requests.get(url)
         if response.ok:
-            resp_json = response.json()
-        ret = f'us[{resp_json[0]["hwi"]["prs"][0]["ipa"]}]'
+            res_json = response.json()
+        ret = f'us[{res_json[0]["hwi"]["prs"][0]["ipa"]}]'
         # time.sleep(2.1)  # limit utilization of Hits per minute: 30/60
     except:
         ret = ''

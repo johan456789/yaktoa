@@ -32,15 +32,9 @@ def get_vocabs(db_con, book_id):
 if __name__ == "__main__":
     con = sqlite3.connect("vocab.db")
 
-    # get books
     books = get_book_info(con)
-
-    # select a book
     book_id = books['id'].iloc[1]
-
-    # get vocabs of the book
     vocabs = get_vocabs(con, book_id)
     print(vocabs.head())
-    # pprint(vocabs.head().values.tolist())
 
     con.close()
