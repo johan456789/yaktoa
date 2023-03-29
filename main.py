@@ -1,3 +1,4 @@
+import sys
 import argparse
 import sqlite3
 import genanki
@@ -106,11 +107,16 @@ def main(con, args):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description='Export Kindle vocabulary to Anki decks with definitions')
-    ap.add_argument('-i', '--input', default='vocab.db', help='Input filename')
+    ap.add_argument('-i', '--input', default='/Volumes/Kindle/system/vocabulary/vocab.db', help='Input filename')
     ap.add_argument('-o', '--output', default='output.apkg', help='Output filename')
     ap.add_argument('--no_ipa', action='store_true', help='Leave IPA field empty')
     ap.add_argument('-p', '--print', action='store_true', help='Print first 5 vocabularies')
     ap.add_argument('-m', '--manual', action='store_true', help='Manually select definition')
+
+    if len(sys.argv)==1:
+        # ap.print_help()
+        # ap.exit()
+        print('Running with default options: -i /Volumes/Kindle/system/vocabulary/vocab.db -o output.apkg')
     args = vars(ap.parse_args())
 
     from pywsd.lesk import simple_lesk
