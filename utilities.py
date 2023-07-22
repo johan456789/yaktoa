@@ -1,8 +1,32 @@
+import os
+import sys
+from contextlib import contextmanager
 from nltk.corpus import wordnet as wn
 from colorama import Style, Fore
-from pywsd.lesk import simple_lesk
 from tqdm import tqdm
 tqdm.pandas()
+
+
+@contextmanager
+def silence_output(stdout=True, stderr=True):
+    # Save the original stdout and stderr
+    original_stdout = sys.stdout
+    original_stderr = sys.stderr
+
+    try:
+        # Redirect stdout and stderr to a null device
+        null_device = open(os.devnull, 'w')
+        if stdout:
+            sys.stdout = null_device
+        if stderr:
+            sys.stderr = null_device
+
+        yield
+    finally:
+        # Restore stdout and stderr
+        sys.stdout = original_stdout
+        sys.stderr = original_stderr
+
 
 def get_def(synset):
     if synset is None:
@@ -17,18 +41,16 @@ def get_def(synset):
     lexname = lexname_map[synset.lexname().split('.')[0]]
     return f'{lexname}{definition}'
 
+
 def predict_def(sent, ambiguous):
+    with silence_output():
+        from pywsd.lesk import simple_lesk  # import here to avoid printing
     try:
         return simple_lesk(sent, ambiguous)
     except Exception as e:
-        # print(e)
+        print(e)
         return None
 
-def ask_for_book(books):
-    for idx, title in enumerate(books['title']):
-        print(f'{str(idx).ljust(4)}{title}')
-    book_idx = int(input('Here are your books, which do you want to use (type number):'))
-    return books['id'].iloc[book_idx]
 
 def get_def_manual(vocabs, report_incorrect=False):
     incorrect_count = 0
@@ -62,6 +84,7 @@ def get_def_manual(vocabs, report_incorrect=False):
     if report_incorrect:
         print(f'WSD accuracy is {round(1 - incorrect_count / len(vocabs), 4) * 100}%')
     return vocabs
+
 
 def get_def_auto(vocabs):
     vocabs['definition'] = vocabs[['stem', 'usage']].progress_apply(

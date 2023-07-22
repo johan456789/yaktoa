@@ -7,10 +7,11 @@ def get_book_info(db_con):
     books = pd.read_sql_query(query_books, db_con)
     return books
 
+
 def get_vocabs(db_con, book_id):
     args = (book_id,)
     cur = db_con.cursor()
-    book_title = cur.execute(f'SELECT title FROM book_info WHERE id=?', args)
+    book_title = cur.execute('SELECT title FROM book_info WHERE id=?', args)
     print(book_title.fetchone()[0])
 
     query_vocabs = '''SELECT
@@ -28,6 +29,7 @@ def get_vocabs(db_con, book_id):
     vocabs.insert(loc=2, column='audio', value='')
     vocabs.insert(loc=2, column='ipa', value='')
     return vocabs
+
 
 if __name__ == "__main__":
     con = sqlite3.connect("vocab.db")

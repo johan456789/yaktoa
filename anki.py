@@ -13,8 +13,10 @@ def add_notes(deck, model, notes):
         my_note = note_constructor(note)
         deck.add_note(my_note)
 
+
 def save_apkg(deck, filename):
     genanki.Package(deck).write_to_file(filename)
+
 
 # Model (Note type)
 my_model = genanki.Model(

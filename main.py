@@ -1,17 +1,26 @@
 import argparse
 import sqlite3
 import nltk
+
+from db import get_book_info, get_vocabs
+from anki import add_notes, save_apkg, my_model, my_deck
+from ipa import get_ipa
+from utilities import get_def_manual, get_def_auto
+
 nltk.download('averaged_perceptron_tagger', quiet=True)
 nltk.download('wordnet', quiet=True)
 nltk.download('punkt', quiet=True)
 nltk.download('omw-1.4', quiet=True)
 
-from db import get_book_info, get_vocabs
-from anki import add_notes, save_apkg, my_model, my_deck
-from ipa import get_ipa
-from utilities import ask_for_book, get_def_manual, get_def_auto
 
-def process_one_book(con, book_id):
+def ask_for_book(books):
+    for idx, title in enumerate(books['title']):
+        print(f'{str(idx).ljust(4)}{title}')
+    book_idx = int(input('Here are your books, which do you want to use (type number):'))
+    return books['id'].iloc[book_idx]
+
+
+def process_book(con, book_id):
     vocabs = get_vocabs(con, book_id)
     if vocabs.empty:  # no vocabs in this book, potentially a built-in dictionary
         return
@@ -28,19 +37,20 @@ def process_one_book(con, book_id):
 
     if args['print']:
         print(vocabs.head())
-    
+
     add_notes(my_deck, my_model, vocabs.values.tolist())
+
 
 def main(con, args):
     books = get_book_info(con)
 
     if args['all']:
         for book_id in books['id']:
-            process_one_book(con, book_id)
+            process_book(con, book_id)
     else:
         book_id = ask_for_book(books)
-        process_one_book(con, book_id)
-    
+        process_book(con, book_id)
+
     save_apkg(my_deck, args['output'])
 
 
