@@ -11,8 +11,10 @@ def get_book_info(db_con):
 def get_vocabs(db_con, book_id):
     args = (book_id,)
     cur = db_con.cursor()
-    book_title = cur.execute('SELECT title FROM book_info WHERE id=?', args)
-    print(book_title.fetchone()[0])
+    book_title = cur.execute('SELECT title FROM book_info WHERE id=?', args).fetchone()
+    if book_title is None:
+        raise ValueError(f'No book found with ID: {book_id}')
+    print(book_title[0])
 
     query_vocabs = '''SELECT
         words.stem, words.word, lookups.usage, book_info.title
