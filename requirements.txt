@@ -4,3 +4,5 @@ pywsd
 requests
 colorama
 eng-to-ipa
+python-dotenv
+openai
