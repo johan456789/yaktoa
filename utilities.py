@@ -3,6 +3,7 @@ import sys
 from contextlib import contextmanager
 from typing import List
 from nltk.corpus import wordnet as wn
+from pywsd.lesk import simple_lesk
 from pywsd.utils import lemmatize
 from colorama import Style, Fore
 import requests
@@ -37,9 +38,7 @@ def silence_output(stdout=True, stderr=True):
 
 
 def get_all_defs(word: str, dictionary='wordnet'):
-    print(word)
     word = lemmatize(word)
-    print(word)
     if dictionary == 'wordnet':
         word = word.replace(' ', '_')  # wn uses _ to combine compound words
         synsets = wn.synsets(word)
@@ -119,8 +118,6 @@ def get_wn_def(synset):
 
 def predict_def(sent: str, word: str, mode: str, definitions: List[str] = []) -> str:
     if mode == 'simple_lesk':
-        with silence_output():
-            from pywsd.lesk import simple_lesk  # import here to avoid printing
         try:
             word = word.replace(' ', '_')  # wn uses _ to combine compound words
             synset = simple_lesk(sent, word)
@@ -143,7 +140,7 @@ def predict_def(sent: str, word: str, mode: str, definitions: List[str] = []) ->
 
 def get_def_manual(vocabs, mode='simple_lesk', dictionary='wordnet', report_incorrect=False):
     # TODO support different modes
-    incorrect_count = 0
+    correct_count = incorrect_count = 0
     for vocab in vocabs.itertuples():
         definitions = get_all_defs(vocab.word, dictionary)
         if len(definitions) == 1:
@@ -164,15 +161,19 @@ def get_def_manual(vocabs, mode='simple_lesk', dictionary='wordnet', report_inco
                 print(f'{str(i).ljust(4)}{definition}{Style.RESET_ALL}')
 
             user_input = input(f'({vocab.Index + 1}/{len(vocabs)}) Type number: ')
-            if user_input == '':  # choose predicted definition
+            idx = int(user_input) if user_input else -1  # TODO handle invalid input that can't be converted to int
+            if user_input == '' or idx == correct_idx:  # choose predicted definition
+                correct_count += 1
                 vocabs.loc[vocab.Index, 'definition'] = predicted_definition
             else:
-                idx = int(user_input)
-                if idx != correct_idx:
-                    incorrect_count += 1
+                incorrect_count += 1
                 vocabs.loc[vocab.Index, 'definition'] = definitions[idx]
     if report_incorrect:
-        print(f'WSD accuracy is {round(1 - incorrect_count / len(vocabs), 4) * 100}%')
+        total_wsd_count = incorrect_count + correct_count
+        print(f'Of all {len(vocabs)} vocabs, {total_wsd_count} requires WSD.')
+        if total_wsd_count > 0:
+            accuracy = round(correct_count / total_wsd_count, 4) * 100
+            print(f'WSD accuracy is {accuracy}% ({correct_count}/{total_wsd_count})')
     return vocabs
 
 
