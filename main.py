@@ -20,15 +20,15 @@ def ask_for_book(books):
     return books['id'].iloc[book_idx]
 
 
-def process_book(con, book_id, mode, manual=False, no_ipa=False, print_vocabs=False):
+def process_book(con, book_id, mode, dictionary, manual=False, no_ipa=False, print_vocabs=False):
     vocabs = get_vocabs(con, book_id)
     if vocabs.empty:  # no vocabs in this book, potentially a built-in dictionary
         return
 
     if manual:
-        vocabs = get_def_manual(vocabs, report_incorrect=True, mode=mode)
+        vocabs = get_def_manual(vocabs, mode, dictionary, report_incorrect=True)
     else:
-        vocabs = get_def_auto(vocabs, mode=mode)
+        vocabs = get_def_auto(vocabs, mode, dictionary)
     del vocabs['word']  # remove word and keep stem column only
 
     if not no_ipa:
@@ -46,10 +46,10 @@ def main(con, args):
 
     if args['all']:
         for book_id in books['id']:
-            process_book(con, book_id, args['mode'], args['manual'], args['no_ipa'], args['print'])
+            process_book(con, book_id, args['mode'], args['dict'], args['manual'], args['no_ipa'], args['print'])
     else:
         book_id = ask_for_book(books)
-        process_book(con, book_id, args['mode'], args['manual'], args['no_ipa'], args['print'])
+        process_book(con, book_id, args['mode'], args['dict'], args['manual'], args['no_ipa'], args['print'])
 
     save_apkg(my_deck, args['output'])
 
@@ -60,6 +60,8 @@ if __name__ == '__main__':
     ap.add_argument('-o', '--output', default='output.apkg', help='Output filename')
     wsd_modes = ['simple_lesk', 'chatgpt_wsd', 'chatgpt_generation']
     ap.add_argument('--mode', default='simple_lesk', help='WSD (Word Sense Disambiguation) mode', choices=wsd_modes)
+    dictionaries = ['wordnet', 'merriam-webster']
+    ap.add_argument('--dict', default='wordnet', help='Dictionary for definition', choices=dictionaries)
     ap.add_argument('--no_ipa', action='store_true', help='Leave IPA field empty')
     ap.add_argument('-p', '--print', action='store_true', help='Print first 5 vocabularies')
     ap.add_argument('-m', '--manual', action='store_true', help='Manually select definition')
