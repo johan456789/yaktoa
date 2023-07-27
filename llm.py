@@ -10,17 +10,19 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 def wsd(sent: str, word: str, definitions: List[str], model='chatgpt') -> int:
     prompt = get_wsd_prompt(sent, word, definitions)
     if model == 'chatgpt':
-        predicted_def_idx = get_completion(prompt)
+        predicted_def_idx = int(get_completion(prompt))
     else:
         raise ValueError(f'Unknown model: {model}')
 
-    return int(predicted_def_idx)
+    # if predicted_def_idx == -1:
+    #     return 0
+    return predicted_def_idx
 
 
 def get_wsd_prompt(sent: str, word: str, definitions: List[str]) -> str:
     formatted_definitions = ''.join([f'{i}. {d}\n' for i, d in enumerate(definitions)])
     prompt = f'''
-Which definition of "{word}" fits the following sentence best?
+Which definition of "{word}" fits in the context of the following sentence best?
 
 Sentence: "{sent}"
 
@@ -28,11 +30,12 @@ Definitions of {word}:
 {formatted_definitions}
 
 Answer with the number of the definition in this format: "1".
-If you think the definition is not in the list, answer with "-1".
+If you think none of the definitions fit, answer with the number
+of the definition that is closest to the meaning of the word.
 The answer should contain a number only and nothing else.
 
     '''
-    print(prompt)
+    # print(prompt)
     return prompt
 
 

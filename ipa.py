@@ -1,21 +1,20 @@
 import sys
 import requests
-from cred import app_key
 import eng_to_ipa
+import os
+from dotenv import load_dotenv
+from utilities import call_mw_api
+
+load_dotenv()
+app_key = os.getenv('MERRIAM_WEBSTER_API_KEY')
 
 
 def get_ipa_from_api(word):
     if not app_key:
         return ''
-
     try:
-        url = "https://dictionaryapi.com/api/v3/references/learners/json/{}?key={}".format(word.lower(), app_key)
-        response = requests.get(url)
-        if not response.ok:
-            response.raise_for_status()
-        res_json = response.json()
+        res_json = call_mw_api(word)
         ret = f'us[{res_json[0]["hwi"]["prs"][0]["ipa"]}]'  # API Doc: 3.2 IPA AND WORD-OF-THE-DAY PRONUNCIATIONS
-        # time.sleep(2.1)  # limit utilization of Hits per minute: 30/60  # TODO: implement a rate limiter
     except requests.HTTPError:
         ret = ''
     except KeyError:
