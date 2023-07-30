@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 from contextlib import contextmanager
 from typing import List
@@ -39,11 +40,31 @@ def silence_output(stdout=True, stderr=True):
 
 def get_all_defs(word: str, dictionary='wordnet'):
     word = lemmatize(word)
+    # print(f'Getting definitions for {word} in {dictionary}...')
     if dictionary == 'wordnet':
         word = word.replace(' ', '_')  # wn uses _ to combine compound words
         synsets = wn.synsets(word)
         return [get_wn_def(synset) for synset in synsets]
     elif dictionary == 'merriam-webster':
+        def get_defs_from_def_obj(def_obj) -> List[str]:
+            definitions = []
+            for sense_obj in def_obj['sseq']:
+                if sense_obj[0][0] == 'sense':  # has defining text (dt)
+                    defining_text = sense_obj[0][1]['dt'][0]
+                    if defining_text[0] == 'text':  # has the actual definition
+                        definition = defining_text[1]
+
+                        # remove formatting strings
+                        definition = definition.replace("{bc}", "", 1)  # remove first "{bc}"
+                        definition = definition.replace(" {bc}", "; ")  # replace remaining "{bc}" with ";"
+                        cr_pattern = r'\{(?:dx|dx_def|dx_ety|ma)\}.*?\{\/(?:dx|dx_def|dx_ety|ma)\}'
+                        definition = re.sub(cr_pattern, '', definition)  # remove cross references
+                        definition = re.sub(r'\{.*?\}', '', definition)  # remove all other formatting strings
+                        definition = definition.rstrip()
+
+                        definitions.append(f'{pos} {definition}')
+            return definitions
+
         try:
             pos_map = {
                 'noun': 'n.',
@@ -64,11 +85,16 @@ def get_all_defs(word: str, dictionary='wordnet'):
                     continue
                 if 'fl' not in entry or entry['fl'] not in pos_map:  # no pos tag
                     continue
-                # if word.lower() not in entry['meta']['stems']:
-                #     continue
+                if word.lower() not in entry['meta']['stems']:
+                    continue
                 pos = pos_map[entry['fl']]
-                for definition in entry['shortdef']:
-                    definitions.append(f'{pos} {definition}')
+                if 'def' in entry:
+                    for def_obj in entry['def']:
+                        definitions.extend(get_defs_from_def_obj(def_obj))
+                elif 'dros' in entry:  # e.g. "Richter scale" has no "def" but has "dros"
+                    for defined_run_ons in entry['dros']:
+                        for def_obj in defined_run_ons['def']:
+                            definitions.extend(get_defs_from_def_obj(def_obj))
                 # TODO save usage info in "uns" and potentially example sentences in "vis"
         except Exception as e:
             print(f'In get_all_defs: {e}')
